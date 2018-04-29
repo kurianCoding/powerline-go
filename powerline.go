@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+	"sync"
+
+	"os"
+	"strconv"
 
 	"github.com/mattn/go-runewidth"
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/text/width"
-	"os"
-	"strconv"
 )
 
 type ShellInfo struct {
@@ -231,15 +233,19 @@ func (p *powerline) drawRow(rowNum int, buffer *bytes.Buffer) {
 func (p *powerline) draw() string {
 
 	var buffer bytes.Buffer
-
+	var wg sync.WaitGroup
+	wg.Add(len(p.Segments))
 	for rowNum := range p.Segments {
-		p.truncateRow(rowNum)
-		p.drawRow(rowNum, &buffer)
-		if rowNum < len(p.Segments)-1 {
-			buffer.WriteRune('\n')
-		}
+		go func() {
+			defer wg.Done()
+			p.truncateRow(rowNum)
+			p.drawRow(rowNum, &buffer)
+		}()
 	}
 
+	wg.Wait()
+
+	buffer.WriteRune('\n')
 	if *p.args.PromptOnNewLine {
 		buffer.WriteRune('\n')
 
