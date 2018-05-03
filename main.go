@@ -173,7 +173,7 @@ func main() {
 				"(valid choices: aws, cwd, docker, dotenv, exit, git, gitlite, hg, host, jobs, load, nix-shell, perlbrew, perms, root, shell-var, ssh, termtitle, time, user, venv, vgo)")),
 		Priority: flag.String(
 			"priority",
-			"root,cwd,user,host,ssh,perms,git-branch,git-status,hg,jobs,exit,cwd-path",
+			"root,cwd,user,host,ssh,git-branch,git-status,cwd-path",
 			commentsWithDefaults("Segments sorted by priority, if not enough space exists, the least priorized segments are removed first. Separate with ','",
 				"(valid choices: aws, cwd, cwd-path, docker, exit, git-branch, git-status, hg, host, jobs, load, nix-shell, perlbrew, perms, root, ssh, time, user, venv, vgo)")),
 		MaxWidthPercentage: flag.Int(
